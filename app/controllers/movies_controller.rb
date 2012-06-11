@@ -9,7 +9,11 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @movies = Movie.order(sort_column + ' ' + sort_direction)
+		@all_ratings = Movie.all_ratings
+		@selected_ratings = ratings_filter
+		
+    @movies = Movie.order(sort_column + ' ' + sort_direction).find_all_by_rating(ratings_filter)
+		
   end
 
   def new
@@ -50,5 +54,8 @@ class MoviesController < ApplicationController
 		%w[asc desc].include?(params[:direction])? params[:direction] : 'asc'
 	end
 
+	def ratings_filter
+		params[:ratings]? params[:ratings].keys : []
+	end
 
 end
