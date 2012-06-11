@@ -12,8 +12,9 @@ class MoviesController < ApplicationController
 		@all_ratings = Movie.all_ratings
 		@selected_ratings = ratings_filter
 		
-    @movies = Movie.order(sort_column + ' ' + sort_direction).find_all_by_rating(ratings_filter)
+		# session[:sort_column] = sort_column
 		
+    @movies = Movie.order(sort_column + ' ' + sort_direction).find_all_by_rating(ratings_filter)
   end
 
   def new
@@ -51,7 +52,7 @@ class MoviesController < ApplicationController
 	end
 
 	def sort_direction
-		%w[asc desc].include?(params[:direction])? params[:direction] : 'asc'
+		%w[asc desc].include?(params[:direction])? params[:direction] : 'desc'
 	end
 
 	def ratings_filter
