@@ -4,11 +4,11 @@
 %table#movies
   %thead
     %tr
-      %th 
+      %th{:class => sort_class('title')}
         = sortable 'title', 'Movie Title'
-      %th
+      %th{:class => sort_class('rating')}
         = sortable 'rating'
-      %th
+      %th{:class => sort_class('release_date')}
         = sortable 'release_date', 'Release Date'
       %th More Info
   %tbody
