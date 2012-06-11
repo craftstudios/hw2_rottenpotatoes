@@ -55,7 +55,11 @@ class MoviesController < ApplicationController
 	end
 
 	def ratings_filter
-		params[:ratings]? params[:ratings].keys : []
+		if params[:ratings]
+			(params[:ratings].class == Array)? params[:ratings] : params[:ratings].keys
+		else
+			[]
+		end
 	end
 
 end

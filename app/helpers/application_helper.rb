@@ -5,7 +5,7 @@ module ApplicationHelper
 		# options[:class] = (column == sort_column)? "hilite #{sort_direction}" : nil
 		title ||= column.titleize
 		direction = column == sort_column && sort_direction == 'asc' ? 'desc' : 'asc'
-		link_to title, movies_path(:sort => column, :direction => direction), options
+		link_to title, movies_path(:sort => column, :direction => direction, :ratings => @selected_ratings), options
 	end
 	
 	def sort_class(column)
