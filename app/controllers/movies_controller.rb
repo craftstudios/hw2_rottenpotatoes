@@ -3,6 +3,7 @@ class MoviesController < ApplicationController
 	helper_method :sort_column, :sort_direction
 	
   def show
+	session.clear
     id = params[:id] # retrieve movie ID from URI route
     @movie = Movie.find(id) # look up movie by unique ID
     # will render app/views/movies/show.<extension> by default
@@ -11,9 +12,23 @@ class MoviesController < ApplicationController
   def index
 		@all_ratings = Movie.all_ratings
 		
-		session[:sort] = sort_column if params.has_key?(:sort)
-		session[:direction] = sort_direction if params.has_key?(:direction)
-		session[:ratings] = ratings_filter if params.has_key?(:ratings)
+		if params.has_key?(:sort)
+			session[:sort] = sort_column 	
+		else
+			session[:sort] ||= 'title'
+		end
+		
+		if params.has_key?(:direction)
+			session[:direction] = sort_direction
+		else 
+			session[:direction] ||= 'desc'
+		end
+		
+		if params.has_key?(:ratings) 
+			session[:ratings] = ratings_filter 
+		else
+			session[:ratings] ||= @all_ratings
+		end
 			
 		@selected_ratings = session[:ratings]
 		@movies = Movie.order(session[:sort] + ' ' + session[:direction]).find_all_by_rating(session[:ratings])
@@ -68,5 +83,5 @@ class MoviesController < ApplicationController
 			@all_ratings
 		end
 	end
-
+	
 end
