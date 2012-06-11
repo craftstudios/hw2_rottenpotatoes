@@ -10,11 +10,17 @@ class MoviesController < ApplicationController
 
   def index
 		@all_ratings = Movie.all_ratings
-		@selected_ratings = ratings_filter
 		
-		# session[:sort_column] = sort_column
+		session[:sort] = sort_column if params.has_key?(:sort)
+		session[:direction] = sort_direction if params.has_key?(:direction)
+		session[:ratings] = ratings_filter if params.has_key?(:ratings)
+			
+		@selected_ratings = session[:ratings]
+		@movies = Movie.order(session[:sort] + ' ' + session[:direction]).find_all_by_rating(session[:ratings])
 		
-    @movies = Movie.order(sort_column + ' ' + sort_direction).find_all_by_rating(ratings_filter)
+		unless params.has_key?(:sort) && params.has_key?(:direction) && params.has_key?(:ratings)
+			redirect_to movies_path(:sort => session[:sort], :direction => session[:direction], :ratings => session[:ratings])
+		end
   end
 
   def new
@@ -59,7 +65,7 @@ class MoviesController < ApplicationController
 		if params[:ratings]
 			(params[:ratings].class == Array)? params[:ratings] : params[:ratings].keys
 		else
-			[]
+			@all_ratings
 		end
 	end
 
